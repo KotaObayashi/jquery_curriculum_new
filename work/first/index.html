@@ -69,15 +69,15 @@
 </div>
 <script src="../../common/js/jquery.js"></script>
 <script>
-  $(function() {
+  $(function() {                        //書く理由、どうゆう動作？jQuery(document).ready(function(){});の略。HTMLが完全にロードされるとjQueryを実行
 // 第1問  id='q1'の要素の文字色を赤色にせよ。
     $('#q1').css('color', 'red');
 // 第2問  id='q2'の要素をクリックしたら背景色をピンクにせよ。
-    $('#q2').click(function() {
+    $('#q2').click(function() {       //無名関数（１度しか使わない時）
       $(this).css('background-color', 'pink');
     });
 // 第3問  id='q3'の要素をクリックしたら2秒かけてフェードアウトさせよ。
-    $('#q3').click(fadeOut);
+    $('#q3').click(fadeOut);        //複数回使う場合は関数に名前をつけて引数へ
       function fadeOut() {
         $(this).fadeOut(2000);
       }
@@ -93,11 +93,11 @@
       $(this).addClass('large');
     });
 // 第6問  id='q6'の要素をクリックしたらこの要素を2秒かけてmargin-topとmargin-leftを100pxの位置に移動させよ。
-    $('#q6').click(function(){
+    $('#q6').click(function() {
       $(this).animate({
         'marginLeft': 100,
         'marginTop': 100
-      },2000)
+      }, 2000)
     });
 // 第7問  id='q7'の子要素をクリックしたら、その要素のインデックス（何番目か）をconsole.log()とalert()を用いて表示させよ。
     $('#q7').find('li').click(function() {
@@ -108,12 +108,12 @@
 // 第8問  id='q8'の要素をhoverしたらlargeというクラスを付与し、hoverが外れたら、クラスを削除せよ。
     $('#q8').hover(function() {
       $(this).addClass('large');
-    },function() {
+    }, function() {
       $(this).removeClass('large');
     });
 // 第9問  id='q9'の要素をクリックしたらこの要素に設定してあるdata属性をconsoleに表示せよ。
     $('#q9').click(function() {
-      var text = $(this).data('text');
+      var text = $(this).data();
       console.log(text);
     });
 // 第10問 id='q10'の子要素をクリックしたら、その要素のインデックスと等しいid='q11'の子要素にlargeというクラスを追加せよ。
@@ -121,7 +121,7 @@
       var num = $(this).index();
       $('#q11').find('li').eq(num).addClass('large');
     });
-  });
+  }); 
 </script>
 </body>
 </html>

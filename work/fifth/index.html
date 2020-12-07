@@ -84,6 +84,22 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
+      $(function() {
+        $('.select').change(function() {
+          var selectValue = $(this).val();
+          if (selectValue == 'all') {  //each不要全てに反映
+            $('.list li').show();
+          } else {
+            $('.list li').each(function(i) {  //.each(function() 引数２つでthis置き換え インデックス番号と要素
+              if ($(i).data('category-type') == selectValue) {
+                $(this).show();  // ==,=== 名前、違い、どっち使う
+              } else {
+                $(this).hide();
+              }
+            });
+          }
+        });
+      });
       // 今回やるのはソート機能です。
       // selectボックスをクリックして言語を選び、その言語と関係のあるリストだけが表示されるプログラムです。
       // [処理の流れ]

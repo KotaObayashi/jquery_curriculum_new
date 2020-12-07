@@ -26,10 +26,10 @@
     <script>
       $(function() {
         $('.nav').find('li').click(function() {
-          var num =$(this).index();
+          var num = $(this).index();
           $('.contents').find('li').addClass('is-hidden')
-                        .eq(num).removeClass('is-hidden');
-        });
+                                   .eq(num).removeClass('is-hidden');
+        });            //not
       });
       // 今回やるのはタブメニューです。
       // navの小要素であるliをクリックして、contents内の小要素であるli要素を表示させる。
