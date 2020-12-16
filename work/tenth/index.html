@@ -39,18 +39,25 @@
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
     <script>
-      $.ajax({
-        url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
-        type: 'GET',
-        datatype: 'json',
-        data: {// 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-          applicationId: appId,  //(今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
-          booksGenreId: '001'
-        },
-      }).done(function(data) {// この中にデータ取得後の動きを記述していきます。
-          console.log(data);
-        });
-
+      $( '.search__btn').on('click', function() {
+        console.log('ボタン');
+     
+        $.ajax({
+          url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+          type: 'GET',
+          datatype: 'json',
+          data: {// 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+            applicationId: appId,  //(今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
+            keyword: keyword,
+            hits: 20
+          },
+        }).done(function(data) {// この中にデータ取得後の動きを記述していきます。
+            //通信成功時の処理
+            console.log(data);
+          }).fail(function() {
+            //通信失敗時の処理
+          });
+      
 
 
 
