@@ -59,9 +59,11 @@
           } else if (data.count == 0) {
             $('ul').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
           }               //(data.Items[0].Item.title)
-          }).fail(function() {
+          }).fail(function(error) {
+            console.log(error);
             $("ul").empty();
-            $('ul').append('接続できませんでした。')
+            if (status == 429)
+            $('ul').append('リクエスト過多です。しばらく時間を置いてからお試しください。')
             if (keyword == '') {
               $('ul').append('検索文字が入力されていません。') 
             }
