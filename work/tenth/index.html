@@ -28,8 +28,9 @@
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
     <script>
-      $( '.search__btn').on('click', function() {
-        //console.log('ボタン');
+      $( '.search__btn').on('click', function(e) {
+        //console.log(e);
+        e.preventDefault();
         var keyword = $('.search__text__input').val();
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
@@ -42,7 +43,6 @@
             hits: 20
           }
         }).done(function(data) {// この中にデータ取得後の動きを記述していきます。
-            //通信成功時の処理
             console.log(data); 
             $("ul").empty();
             if (data.count > 0) {
@@ -56,19 +56,32 @@
                   '</div>' + '</li>');
               $('ul').append(template);   
               })
-          } else if (data.count == 0) {
-            $('ul').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
-          }               //(data.Items[0].Item.title)
-          }).fail(function(error) {
+            } else if (data.count == 0) {
+              $('ul').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
+            }
+        }).fail(function(error) {
             console.log(error);
             $("ul").empty();
-            if (status == 429)
-            $('ul').append('リクエスト過多です。しばらく時間を置いてからお試しください。')
-            if (keyword == '') {
-              $('ul').append('検索文字が入力されていません。') 
+            if (error.status == 400) {
+              $('ul').append('検索内容が正しくありません。')
+            } else if (error.status == 429) {
+              $('ul').append('リクエスト過多です。しばらく時間を置いてからお試しください。')
+            } else if (error.status == 500) {
+              $('ul').append('システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。')   
+            } else if (error.status == 503) {
+              $('ul').append('メンテナンス')
             }
           })
-        });
+      });
+      //<div class="pager" data-js="pager">
+       //<div class="counter">
+         //<span class="counter-current"></span>/<span class="counter-all"></span>
+       //</div>
+       //<div class="btn-wrapper">
+         //<a class="btn-item" data-js="page-prev" href="">前へ</a>
+         //<a class="btn-item" data-js="page-next" href="">次へ</a>
+       //</div>
+      //</div>
 
 
 
