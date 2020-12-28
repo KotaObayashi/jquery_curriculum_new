@@ -27,14 +27,18 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
-    <script>
-      $( '.search__btn').on('click', function(e) {
+    <script>        
+      $( '.search__btn').on('click', function() {
         getBooks();
       });
-      $('.btn-item').on('click', function(e){
+      $(document).on('click', '.btn-item', function(e){
         getBooks();
         e.preventDefault(); 
-        console.log('btn-itemをクリック');
+        console.log('クリック');
+        var bb = $('.btn-item').data(js);
+        if (bb == 'page-next') {
+          //次へクリック時の処理
+        }
       });  
 
       function getBooks() {
@@ -72,7 +76,7 @@
                  '<span class="counter-current">' + '</span>' + '<span class="counter-all">' + '</span>' + '</div>' +
                  '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
                  '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>')
-              $('.lists').append(paging); //動的要素クリック
+              $('.lists').append(paging); 
         }).fail(function(error) {
             console.log(error);
             $('.message').empty();
