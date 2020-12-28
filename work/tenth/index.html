@@ -60,7 +60,7 @@
         })
         .done(function(data) {// この中にデータ取得後の動きを記述していきます。
             console.log(data); 
-            $('.message').empty();
+            $('.lists, .message').empty();
             if (data.count > 0) {
             $.each(data.Items,function(i,item) {
               var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
@@ -89,7 +89,7 @@
               }
         }).fail(function(error) {
             console.log(error);
-            $('.message').empty();
+            $('.lists, .message').empty();
             if (error.status == 400) {
               $('.message').append('<p>検索内容が正しくありません。</p>');
             } else if (error.status == 429) {
