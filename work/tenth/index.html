@@ -31,15 +31,16 @@
       $( '.search__btn').on('click', function() {
         getBooks();
       });
-      $(document).on('click', '.btn-item', function(e){
+      $(document).on('click', "[data-js = 'page-next']", function(e){
         getBooks();
         e.preventDefault(); 
-        console.log('クリック');
-        var bb = $('.btn-item').data(js);
-        if (bb == 'page-next') {
-          //次へクリック時の処理
-        }
+        console.log('次へ');
       });  
+      $(document).on('click', "[data-js = 'page-prev']", function(e){
+        getBooks();
+        e.preventDefault(); 
+        console.log('前へ');
+      });
 
       function getBooks() {
         var keyword = $('.search__text__input').val();
@@ -77,6 +78,7 @@
                  '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
                  '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>')
               $('.lists').append(paging); 
+              //console.log(paging);
         }).fail(function(error) {
             console.log(error);
             $('.message').empty();
