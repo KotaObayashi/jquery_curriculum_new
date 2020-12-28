@@ -40,6 +40,8 @@
         getBooks();
         e.preventDefault(); 
         console.log('前へ');
+        $ff =+ data.page;
+
       });
 
       function getBooks() {
@@ -57,8 +59,8 @@
           }
         })
         .done(function(data) {// この中にデータ取得後の動きを記述していきます。
-            //console.log(data); 
-            $('.lists').empty();
+            console.log(data); 
+            $('.message').empty();
             if (data.count > 0) {
             $.each(data.Items,function(i,item) {
               var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
@@ -74,11 +76,17 @@
               $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>')
             }
             var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
-                 '<span class="counter-current">' + '</span>' + '<span class="counter-all">' + '</span>' + '</div>' +
+                 '<span class="counter-current">' + data.page +'</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' + '</div>' +
                  '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
                  '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>')
               $('.lists').append(paging); 
-              //console.log(paging);
+              if (data.pageCount == 1) {
+                $('.btn-item').addClass('disabled');
+              } else if (data.page == 1) {
+                $("[data-js = 'page-prev']").addClass('disabled');
+              } else if (data.page == data.pageCount) {
+                $("[data-js = 'page-next']").addClass('disabled');
+              }
         }).fail(function(error) {
             console.log(error);
             $('.message').empty();
