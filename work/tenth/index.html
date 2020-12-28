@@ -29,8 +29,15 @@
     <script src="./js/appid.js"></script>
     <script>
       $( '.search__btn').on('click', function(e) {
-        //console.log(e);
-        e.preventDefault();
+        getBooks();
+      });
+      $('.btn-item').on('click', function(e){
+        getBooks();
+        e.preventDefault(); 
+        console.log('btn-itemをクリック');
+      });  
+
+      function getBooks() {
         var keyword = $('.search__text__input').val();
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
@@ -43,8 +50,9 @@
             hits: 20,
             page: 1
           }
-        }).done(function(data) {// この中にデータ取得後の動きを記述していきます。
-            console.log(data); 
+        })
+        .done(function(data) {// この中にデータ取得後の動きを記述していきます。
+            //console.log(data); 
             $('.lists').empty();
             if (data.count > 0) {
             $.each(data.Items,function(i,item) {
@@ -64,17 +72,7 @@
                  '<span class="counter-current">' + '</span>' + '<span class="counter-all">' + '</span>' + '</div>' +
                  '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
                  '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>')
-              $('.lists').append(paging);  //動的要素クリック
-              $('.pager').on('click', '.btn-item', function(e){
-                e.preventDefault();
-                console.log('btn-itemをクリック');
-                $('.btn-item').data(js);
-                if (data(js) == 'page-next') {
-                  data.Items[i].Item.page + 1
-                } else if (data(js) == 'page-prev') {
-                  data.Items[i].Item.page - 1
-                }
-              });
+              $('.lists').append(paging); //動的要素クリック
         }).fail(function(error) {
             console.log(error);
             $('.message').empty();
@@ -88,8 +86,7 @@
               $('.message').append('<p>メンテナンス</p>');
             }
           })
-      });
-      
+        }
      
 
 
