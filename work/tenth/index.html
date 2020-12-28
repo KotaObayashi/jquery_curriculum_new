@@ -40,11 +40,12 @@
             applicationId: appId,  //(今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
             booksGenreId: '001',
             keyword: keyword,
-            hits: 20
+            hits: 20,
+            page: 1
           }
         }).done(function(data) {// この中にデータ取得後の動きを記述していきます。
             console.log(data); 
-            $("ul").empty();
+            $('.lists').empty();
             if (data.count > 0) {
             $.each(data.Items,function(i,item) {
               var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
@@ -54,34 +55,42 @@
                   '<p class="lists__item__detail">作者　：　' + data.Items[i].Item.author + '</p>' +
                   '<p class="lists__item__detail">出版社：　' + data.Items[i].Item.publisherName + '</p>' + '</a>' +
                   '</div>' + '</li>');
-              $('ul').append(template);   
+                $('.lists').append(template);  
               })
             } else if (data.count == 0) {
-              $('ul').append('検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。')
+              $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>')
             }
+            var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
+                 '<span class="counter-current">' + '</span>' + '<span class="counter-all">' + '</span>' + '</div>' +
+                 '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
+                 '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>')
+              $('.lists').append(paging);  //動的要素クリック
+              $('.pager').on('click', '.btn-item', function(e){
+                e.preventDefault();
+                console.log('btn-itemをクリック');
+                $('.btn-item').data(js);
+                if (data(js) == 'page-next') {
+                  data.Items[i].Item.page + 1
+                } else if (data(js) == 'page-prev') {
+                  data.Items[i].Item.page - 1
+                }
+              });
         }).fail(function(error) {
             console.log(error);
-            $("ul").empty();
+            $('.message').empty();
             if (error.status == 400) {
-              $('ul').append('検索内容が正しくありません。')
+              $('.message').append('<p>検索内容が正しくありません。</p>');
             } else if (error.status == 429) {
-              $('ul').append('リクエスト過多です。しばらく時間を置いてからお試しください。')
+              $('.message').append('<p>リクエスト過多です。しばらく時間を置いてからお試しください。</p>');
             } else if (error.status == 500) {
-              $('ul').append('システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。')   
+              $('.message').append('<p>システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。</p>');
             } else if (error.status == 503) {
-              $('ul').append('メンテナンス')
+              $('.message').append('<p>メンテナンス</p>');
             }
           })
       });
-      //<div class="pager" data-js="pager">
-       //<div class="counter">
-         //<span class="counter-current"></span>/<span class="counter-all"></span>
-       //</div>
-       //<div class="btn-wrapper">
-         //<a class="btn-item" data-js="page-prev" href="">前へ</a>
-         //<a class="btn-item" data-js="page-next" href="">次へ</a>
-       //</div>
-      //</div>
+      
+     
 
 
 
