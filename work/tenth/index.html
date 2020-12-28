@@ -33,15 +33,15 @@
       });
       $(document).on('click', "[data-js = 'page-next']", function(e){
         getBooks();
-        e.preventDefault(); 
+        btnPaging(e);
         console.log('次へ');
+        //e.preventDefault(); 
+        //$('.lists').empty();
       });  
       $(document).on('click', "[data-js = 'page-prev']", function(e){
         getBooks();
-        e.preventDefault(); 
+        btnPaging(e);
         console.log('前へ');
-        $ff =+ data.page;
-
       });
 
       function getBooks() {
@@ -100,6 +100,10 @@
               $('.message').append('<p>メンテナンス</p>');
             }
           })
+        }
+        function btnPaging(e) {
+          e.preventDefault(); 
+        $('.lists').empty();
         }
      
 
