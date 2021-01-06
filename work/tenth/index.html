@@ -43,7 +43,7 @@
       });
 
       function getBooks(i) {
-        keyword = $('.search__text__input').val();
+        var keyword = $('.search__text__input').val();
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
@@ -77,11 +77,20 @@
           } else if (data.count == 0) {
             $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
           } if (data.pageCount == 1) {
-            $('.btn-item').addClass('disabled');
+            $('.btn-item').addClass('disabled').on('click', function(e) {
+              e.preventDefault();
+              console.log('キャンセル1');
+            });
           } else if (data.page == 1) {
-            $("[data-js = 'page-prev']").addClass('disabled');
+            $("[data-js = 'page-prev']").addClass('disabled').on('click', function(e) {
+              e.preventDefault();
+              console.log('キャンセル2');
+            });
           } else if (data.page == data.pageCount) {
-            $("[data-js = 'page-next']").addClass('disabled');
+            $("[data-js = 'page-next']").addClass('disabled').on('click', function(e) {
+              e.preventDefault();
+              console.log('キャンセル3');
+            });
           }
         }).fail(function(error) {
           $('.lists, .message').empty();
@@ -103,7 +112,6 @@
         e.preventDefault(); 
         $('.lists').empty();
       }
-     
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
       //
