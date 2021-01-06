@@ -28,21 +28,20 @@
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
     <script>     
+      var prevPage;
+      var nextPage;
       $('.search__btn').on('click', function() {
         getBooks(1);
       });
       $(document).on('click', "[data-js = 'page-next']", function(e) {
-        //var nextPage = data.page + 1;
-        getBooks();
-        btnPaging(ii);
-        console.log('次へ');
+        btnPaging(e);
+        getBooks(nextPage);
       });  
       $(document).on('click', "[data-js = 'page-prev']", function(e) {
-        getBooks();
         btnPaging(e);
-        console.log('前へ');
+        getBooks(prevPage);
       });
-      
+
       function getBooks(i) {
         var keyword = $('.search__text__input').val();
         $.ajax({
@@ -56,9 +55,9 @@
             hits: 20,
             page: i
           }
-        })
-        .done(function(data) {         // この中にデータ取得後の動きを記述していきます。
-           //console.log(data);
+        }).done(function(data) {         // この中にデータ取得後の動きを記述していきます。
+            prevPage = data.page - 1;
+            nextPage = data.page + 1; 
             $('.lists, .message').empty();
             if (data.count > 0) {
               var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
@@ -85,7 +84,6 @@
                 $("[data-js = 'page-next']").addClass('disabled');
               }
         }).fail(function(error) {
-            console.log(error);
             $('.lists, .message').empty();
             if (error.status == 400) {
               $('.message').append('<p>検索文字が入力されていません。</p>');
@@ -101,7 +99,7 @@
 
         function btnPaging(e) {
           e.preventDefault(); 
-        $('.lists').empty();
+          $('.lists').empty();
         }
      
       // 楽天ブックスの総合検索APIを使って製作してください。
