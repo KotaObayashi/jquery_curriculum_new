@@ -32,7 +32,7 @@
       var nextPage;
       $('.search__btn').on('click', function() {
         getBooks(1);
-      });
+      });     //1ページ前へ
       $(document).on('click', "[data-js = 'page-next']", function(e) {
         btnPaging(e);
         getBooks(nextPage);
@@ -43,7 +43,7 @@
       });
 
       function getBooks(i) {
-        var keyword = $('.search__text__input').val();
+        keyword = $('.search__text__input').val();
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
@@ -56,51 +56,53 @@
             page: i
           }
         }).done(function(data) {         // この中にデータ取得後の動きを記述していきます。
-            prevPage = data.page - 1;
-            nextPage = data.page + 1; 
-            $('.lists, .message').empty();
-            if (data.count > 0) {
-              var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
-                 '<span class="counter-current">' + data.page +'</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' + '</div>' +
-                 '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
-                 '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>');
+          prevPage = data.page - 1;
+          nextPage = data.page + 1; 
+          $('.lists, .message').empty();
+          if (data.count > 0) {
+            var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
+              '<span class="counter-current">' + data.page +'</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' + '</div>' +
+              '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
+              '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>');
             $.each(data.Items,function(i) {
               var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
-                  data.Items[i].Item.itemUrl + '"class="lists__item__link" target="_blank">' + '<img src="' + data.Items[i].Item
-                  .largeImageUrl + '" class="lists__item__img" alt="' + data.Items[i].Item.title + '">' +
-                  '<p class="lists__item__detail">作品名：' + data.Items[i].Item.title + '</p>' +
-                  '<p class="lists__item__detail">作者　：' + data.Items[i].Item.author + '</p>' +
-                  '<p class="lists__item__detail">出版社：' + data.Items[i].Item.publisherName + 
-                  '</p>' + '</a>' +'</div>' + '</li>');
-                $('.lists').append(template, paging);  
-              })
-            } else if (data.count == 0) {
-              $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
-            } if (data.pageCount == 1) {
-                $('.btn-item').addClass('disabled');
-              } else if (data.page == 1) {
-                $("[data-js = 'page-prev']").addClass('disabled');
-              } else if (data.page == data.pageCount) {
-                $("[data-js = 'page-next']").addClass('disabled');
-              }
+                data.Items[i].Item.itemUrl + '"class="lists__item__link" target="_blank">' + '<img src="' + data.Items[i].Item
+                .largeImageUrl + '" class="lists__item__img" alt="' + data.Items[i].Item.title + '">' +
+                '<p class="lists__item__detail">作品名：' + data.Items[i].Item.title + '</p>' +
+                '<p class="lists__item__detail">作者　：' + data.Items[i].Item.author + '</p>' +
+                '<p class="lists__item__detail">出版社：' + data.Items[i].Item.publisherName + 
+                '</p>' + '</a>' +'</div>' + '</li>');
+              $('.lists').append(template, paging);  
+            })
+          } else if (data.count == 0) {
+            $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
+          } if (data.pageCount == 1) {
+            $('.btn-item').addClass('disabled');
+          } else if (data.page == 1) {
+            $("[data-js = 'page-prev']").addClass('disabled');
+          } else if (data.page == data.pageCount) {
+            $("[data-js = 'page-next']").addClass('disabled');
+          }
         }).fail(function(error) {
-            $('.lists, .message').empty();
-            if (error.status == 400) {
-              $('.message').append('<p>検索文字が入力されていません。</p>');
-            } else if (error.status == 429) {
-              $('.message').append('<p>リクエスト過多です。しばらく時間を置いてからお試しください。</p>');
-            } else if (error.status == 500) {
-              $('.message').append('<p>システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。</p>');
-            } else if (error.status == 503) {
-              $('.message').append('<p>メンテナンス</p>');
-            }
-          })
-        }
-
-        function btnPaging(e) {
-          e.preventDefault(); 
-          $('.lists').empty();
-        }
+          $('.lists, .message').empty();
+          if (error.status == 400) {
+            $('.message').append('<p>検索文字が入力されていません。</p>');
+          } else if (error.status == 429) {
+            $('.message').append('<p>リクエスト過多です。しばらく時間を置いてからお試しください。</p>');
+          } else if (error.status == 500) {
+            $('.message').append('<p>システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。</p>');
+          } else if (error.status == 503) {
+            $('.message').append('<p>メンテナンス</p>');
+          } else if (error.status == 0) {
+            $('.message').append('<p>通信に失敗しました。インターネットの接続をご確認ください。</p>');
+          }
+        })
+      }
+              //検索内容かえた時の処理
+      function btnPaging(e) {
+        e.preventDefault(); 
+        $('.lists').empty();
+      }
      
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
