@@ -35,7 +35,11 @@
       });     //1ページ前へ
       $(document).on('click', "[data-js = 'page-next']", function(e) {
         btnPaging(e);
-        getBooks(nextPage);
+        getBooks(nextPage);   //セレクタ
+        if ($("[data-js = 'page-next']").hasClass('disabled')) {
+          e.preventDefault();
+          $(".pager.btn-wrapper.btn-item").css('display', 'none');
+        }
       });  
       $(document).on('click', "[data-js = 'page-prev']", function(e) {
         btnPaging(e);
@@ -43,7 +47,7 @@
       });
 
       function getBooks(i) {
-        var keyword = $('.search__text__input').val();
+        var keyword = $('.search__text__input').val();  //検索ボタン押したときのみ
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
@@ -74,24 +78,15 @@
                 '</p>' + '</a>' +'</div>' + '</li>');
               $('.lists').append(template, paging);  
             })
+          } if (data.pageCount == 1) {
+            $('.btn-item').addClass('disabled')
+          } if (data.page == 1) {
+            $("[data-js = 'page-prev']").addClass('disabled')
+          } if (data.page == data.pageCount) {
+            $("[data-js = 'page-next']").addClass('disabled')
           } else if (data.count == 0) {
             $('.message').append('<p>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</p>');
-          } if (data.pageCount == 1) {
-            $('.btn-item').addClass('disabled').on('click', function(e) {
-              e.preventDefault();
-              console.log('キャンセル1');
-            });
-          } else if (data.page == 1) {
-            $("[data-js = 'page-prev']").addClass('disabled').on('click', function(e) {
-              e.preventDefault();
-              console.log('キャンセル2');
-            });
-          } else if (data.page == data.pageCount) {
-            $("[data-js = 'page-next']").addClass('disabled').on('click', function(e) {
-              e.preventDefault();
-              console.log('キャンセル3');
-            });
-          }
+          } 
         }).fail(function(error) {
           $('.lists, .message').empty();
           if (error.status == 400) {
