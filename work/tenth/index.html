@@ -27,7 +27,7 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script src="./js/appid.js"></script>
-    <script>     
+    <script>
       var prevPage = null;
       var nextPage = null;
       var keyword = ""; 
@@ -118,25 +118,25 @@
       
       function failure(error) {
         $('.lists, .message').empty();
-          switch (error.status) {
-            case 400:
-              $('.message').append('<p>検索文字が入力されていません。</p>');
-              break;
-            case 429:
-              $('.message').append('<p>リクエスト過多です。しばらく時間を置いてからお試しください。</p>');
-              break;
-            case 500:
-              $('.message').append('<p>システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。</p>');
-              break;
-            case 503:
-              $('.message').append('<p>メンテナンス</p>');
-              break;
-            case 0:
-              $('.message').append('<p>通信に失敗しました。インターネットの接続をご確認ください。</p>');
-              break;
-            default:
-              $('.message').append('<p>管理者に問い合わせてください。</p>');
-          }
+        switch (error.status) {
+          case 400:
+            $('.message').append('<p>検索文字が入力されていません。</p>');
+            break;
+          case 429:
+            $('.message').append('<p>リクエスト過多です。しばらく時間を置いてからお試しください。</p>');
+            break;
+          case 500:
+            $('.message').append('<p>システムエラー。長時間続くようであれば、こちらよりごお問い合わせください。</p>');
+            break;
+          case 503:
+            $('.message').append('<p>メンテナンス</p>');
+            break;
+          case 0:
+            $('.message').append('<p>通信に失敗しました。インターネットの接続をご確認ください。</p>');
+            break;
+          default:
+            $('.message').append('<p>管理者に問い合わせてください。</p>');
+        }
       }
 
       // 楽天ブックスの総合検索APIを使って製作してください。
