@@ -31,22 +31,27 @@
       var prevPage;
       var nextPage;
       var keyword;
+      
       $('.search__btn').on('click', function() {
         keyword = $('.search__text__input').val();
         getBooks(1, keyword);
-      });     //1ページ前へ
+      });
+
       $(document).on('click', "[data-js = 'page-next']", function(e) {
-        btnPaging(e);
-        console.log($("[data-js = 'page-next']"));
-        getBooks(nextPage);   //セレクタ
-        //if ($("[data-js = 'page-next']").hasClass('disabled')) {
-          e.preventDefault();
-          $("[data-js = 'page-next']").css('color', 'red');
-        //}
-      });  
+        e.preventDefault();
+        if (!$("[data-js = 'page-next']").hasClass('disabled')) {
+          getBooks(nextPage); 
+        }
+        $(document).scrollTop(0);
+      });
+
       $(document).on('click', "[data-js = 'page-prev']", function(e) {
-        btnPaging(e);
-        getBooks(prevPage);
+        e.preventDefault();
+        if ($("[data-js = 'page-prev']").hasClass('disabled')) {
+          return false;
+        }
+        getBooks(prevPage); 
+        $(document).scrollTop(0);
       });
 
       function getBooks(i) {
@@ -54,31 +59,38 @@
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
           datatype: 'json',
-          data: {                   // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-            applicationId: appId,  //(今回はこの変数をIDとして使用します) ※メンターから別途渡されるファイルを読み込んでください。
+          data: {
+            applicationId: appId,
             booksGenreId: '001',
             keyword: keyword,
             hits: 20,
             page: i
           }
-        }).done(function(data) {         // この中にデータ取得後の動きを記述していきます。
+        }).done(function(data) {
           prevPage = data.page - 1;
           nextPage = data.page + 1; 
-          //console.log($("btn-item"));
           $('.lists, .message').empty();
           if (data.count > 0) {
-            var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
-              '<span class="counter-current">' + data.page +'</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' + '</div>' +
-              '<div class="btn-wrapper">' + '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
-              '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + '</div>' + '</div>');
+            var paging = $('<div class="pager" data-js="pager">' +
+                             '<div class="counter">' + 
+                               '<span class="counter-current">' + data.page +'</span>' + '/' + '<span class="counter-all">' + data.pageCount + '</span>' + 
+                             '</div>' +
+                             '<div class="btn-wrapper">' + 
+                               '<a class="btn-item" data-js="page-prev" href="">前へ' + '</a>' +
+                               '<a class="btn-item" data-js="page-next" href="">次へ' + '</a>' + 
+                             '</div>' + 
+                           '</div>');
             $.each(data.Items,function(i) {
-              var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
-                data.Items[i].Item.itemUrl + '"class="lists__item__link" target="_blank">' + '<img src="' + data.Items[i].Item
-                .largeImageUrl + '" class="lists__item__img" alt="' + data.Items[i].Item.title + '">' +
-                '<p class="lists__item__detail">作品名：' + data.Items[i].Item.title + '</p>' +
-                '<p class="lists__item__detail">作者　：' + data.Items[i].Item.author + '</p>' +
-                '<p class="lists__item__detail">出版社：' + data.Items[i].Item.publisherName + 
-                '</p>' + '</a>' +'</div>' + '</li>');
+              var template = $('<li class="lists__item">' + 
+                                 '<div class="lists__item__inner">' + 
+                                   '<a href="' + data.Items[i].Item.itemUrl + '"class="lists__item__link" target="_blank">' + 
+                                     '<img src="' + data.Items[i].Item.largeImageUrl + '" class="lists__item__img" alt="' + data.Items[i].Item.title + '">' +
+                                     '<p class="lists__item__detail">作品名：' + data.Items[i].Item.title + '</p>' +
+                                     '<p class="lists__item__detail">作者　：' + data.Items[i].Item.author + '</p>' +
+                                     '<p class="lists__item__detail">出版社：' + data.Items[i].Item.publisherName + '</p>' + 
+                                   '</a>' +
+                                 '</div>' + 
+                               '</li>');
               $('.lists').append(template, paging);  
             })
           } if (data.pageCount == 1) {
@@ -106,10 +118,6 @@
         })
       }
 
-      function btnPaging(e) {
-        e.preventDefault(); 
-        $('.lists').empty();
-      }
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
       //
