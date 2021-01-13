@@ -30,16 +30,19 @@
     <script>     
       var prevPage;
       var nextPage;
+      var keyword;
       $('.search__btn').on('click', function() {
-        getBooks(1);
+        keyword = $('.search__text__input').val();
+        getBooks(1, keyword);
       });     //1ページ前へ
       $(document).on('click', "[data-js = 'page-next']", function(e) {
         btnPaging(e);
+        console.log($("[data-js = 'page-next']"));
         getBooks(nextPage);   //セレクタ
-        if ($("[data-js = 'page-next']").hasClass('disabled')) {
+        //if ($("[data-js = 'page-next']").hasClass('disabled')) {
           e.preventDefault();
-          $(".pager.btn-wrapper.btn-item").css('display', 'none');
-        }
+          $("[data-js = 'page-next']").css('color', 'red');
+        //}
       });  
       $(document).on('click', "[data-js = 'page-prev']", function(e) {
         btnPaging(e);
@@ -47,7 +50,6 @@
       });
 
       function getBooks(i) {
-        var keyword = $('.search__text__input').val();  //検索ボタン押したときのみ
         $.ajax({
           url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
           type: 'GET',
@@ -62,6 +64,7 @@
         }).done(function(data) {         // この中にデータ取得後の動きを記述していきます。
           prevPage = data.page - 1;
           nextPage = data.page + 1; 
+          //console.log($("btn-item"));
           $('.lists, .message').empty();
           if (data.count > 0) {
             var paging = $('<div class="pager" data-js="pager">' + '<div class="counter">' + 
@@ -102,7 +105,7 @@
           }
         })
       }
-              //検索内容かえた時の処理
+
       function btnPaging(e) {
         e.preventDefault(); 
         $('.lists').empty();
